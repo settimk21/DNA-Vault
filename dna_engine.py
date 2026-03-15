@@ -16,9 +16,7 @@ class DNAEngine:
 
         self.dna_to_bit = {v: k for k, v in self.bit_to_dna.items()}
 
-    # ------------------------------
     # ENCODE
-    # ------------------------------
     def encode(self, data: bytes) -> str:
 
         # Create checksum
@@ -48,9 +46,7 @@ class DNAEngine:
 
         return dna_sequence
 
-    # ------------------------------
     # DECODE
-    # ------------------------------
     def decode(self, dna_sequence: str) -> bytes:
 
         dna_sequence = dna_sequence.strip().lower()

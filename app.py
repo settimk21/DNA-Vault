@@ -1,52 +1,114 @@
 import streamlit as st
 from dna_engine import DNAEngine
 
-# Initialize DNA engine
 engine = DNAEngine()
 
-# Page configuration
 st.set_page_config(
     page_title="HYPER-VAULT",
     page_icon="🧬",
-    layout="centered"
+    layout="wide"
 )
 
-st.title("🧬 HYPER-VAULT")
-st.markdown("### Bio-Digital Data Archiving System")
+# -------------------------
+# Custom CSS Styling
+# -------------------------
+st.markdown("""
+<style>
 
-tab1, tab2 = st.tabs(["Upload & Encode", "Paste & Decode"])
+/* Main app background */
+.stApp {
+    background: linear-gradient(135deg, #050505, #0d1b2a, #1b263b);
+    color: white;
+}
+
+/* Title styling */
+h1 {
+    text-align: center;
+    color: #00ffc6;
+    font-size: 60px;
+}
+
+/* Subtitle */
+h3 {
+    text-align: center;
+    color: #e0e0e0;
+}
+
+/* Text areas */
+textarea {
+    background-color: #0b132b !important;
+    color: #00ffc6 !important;
+    border-radius: 10px !important;
+}
+
+/* Buttons */
+button {
+    background-color: #00ffc6 !important;
+    color: black !important;
+    border-radius: 8px !important;
+    font-weight: bold !important;
+}
+
+/* Upload box */
+.css-1cpxqw2 {
+    background-color: #0b132b;
+    border-radius: 10px;
+}
+
+/* Tabs */
+.stTabs [data-baseweb="tab"] {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# -------------------------
+# Header
+# -------------------------
+st.title("🧬 HYPER-VAULT")
+
+st.markdown(
+"""
+### Next-Generation Bio-Digital Data Archiving
+
+Securely convert **Digital Data → DNA Sequence → Recover Original Files**
+"""
+)
+
+tab1, tab2 = st.tabs(["🔬 Encode File", "🧬 Decode DNA"])
 
 # -------------------------
 # ENCODING TAB
 # -------------------------
 with tab1:
 
-    st.subheader("Step 1: Convert Digital File → DNA")
+    st.subheader("Upload File to Convert into DNA")
 
-    uploaded_file = st.file_uploader(
+    file = st.file_uploader(
         "Upload a text file",
-        type=["txt"],
-        key="u1"
+        type=["txt"]
     )
 
-    if uploaded_file is not None:
+    if file:
 
         try:
-            file_bytes = uploaded_file.read()
 
-            dna_data = engine.encode(file_bytes)
+            dna_data = engine.encode(file.read())
 
             st.success("File successfully encoded into DNA sequence")
 
             st.text_area(
                 "DNA Sequence",
                 dna_data,
-                height=200
+                height=220
             )
 
             st.info(f"DNA Length: {len(dna_data)} letters")
 
         except Exception as e:
+
             st.error(f"Encoding error: {str(e)}")
 
 
@@ -55,29 +117,29 @@ with tab1:
 # -------------------------
 with tab2:
 
-    st.subheader("Step 2: Convert DNA → Digital File")
+    st.subheader("Paste DNA Sequence to Recover File")
 
     dna_input = st.text_area(
-        "Paste DNA sequence (a,c,g,t only)",
-        height=200,
-        key="d1"
+        "Paste DNA sequence (a, c, g, t)",
+        height=220
     )
 
     if st.button("Recover Original File"):
 
         if dna_input.strip() == "":
-            st.warning("Please paste a DNA sequence first.")
+            st.warning("Please paste a DNA sequence first")
 
         else:
+
             try:
 
-                original_bytes = engine.decode(dna_input)
+                restored_data = engine.decode(dna_input)
 
-                st.success("DNA successfully decoded!")
+                st.success("DNA verified and decoded successfully")
 
                 st.download_button(
                     label="Download Restored File",
-                    data=original_bytes,
+                    data=restored_data,
                     file_name="restored_file.txt",
                     mime="text/plain"
                 )
@@ -85,4 +147,5 @@ with tab2:
                 st.balloons()
 
             except Exception as e:
+
                 st.error(str(e))

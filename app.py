@@ -1,5 +1,6 @@
 import streamlit as st
 from dna_engine import DNAEngine
+import time
 
 engine = DNAEngine()
 
@@ -9,143 +10,145 @@ st.set_page_config(
     layout="wide"
 )
 
-# -------------------------
-# Custom CSS Styling
-# -------------------------
+# --------------------------
+# Animated Background + UI Style
+# --------------------------
 st.markdown("""
 <style>
 
-/* Main app background */
+/* Animated background */
 .stApp {
-    background: linear-gradient(135deg, #050505, #0d1b2a, #1b263b);
+    background: linear-gradient(-45deg, #020617, #0f172a, #1e293b, #020617);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
     color: white;
 }
 
-/* Title styling */
+@keyframes gradientBG {
+    0% {background-position:0% 50%;}
+    50% {background-position:100% 50%;}
+    100% {background-position:0% 50%;}
+}
+
+/* Main container */
+.block-container {
+    background: rgba(15,23,42,0.75);
+    padding: 2rem;
+    border-radius: 14px;
+    backdrop-filter: blur(10px);
+}
+
+/* Title */
 h1 {
     text-align: center;
-    color: #00ffc6;
-    font-size: 60px;
+    color: #e2e8f0;
+    font-size: 54px;
 }
 
 /* Subtitle */
 h3 {
     text-align: center;
-    color: #e0e0e0;
+    color: #cbd5f5;
 }
 
-/* Text areas */
+/* Text area styling */
 textarea {
-    background-color: #0b132b !important;
-    color: #00ffc6 !important;
+    background: #0f172a !important;
+    color: #e5e7eb !important;
     border-radius: 10px !important;
 }
 
 /* Buttons */
 button {
-    background-color: #00ffc6 !important;
-    color: black !important;
+    background: #2563eb !important;
+    color: white !important;
     border-radius: 8px !important;
-    font-weight: bold !important;
-}
-
-/* Upload box */
-.css-1cpxqw2 {
-    background-color: #0b132b;
-    border-radius: 10px;
+    border: none !important;
 }
 
 /* Tabs */
 .stTabs [data-baseweb="tab"] {
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 17px;
+    font-weight: 600;
 }
 
 </style>
 """, unsafe_allow_html=True)
 
-# -------------------------
+# --------------------------
 # Header
-# -------------------------
+# --------------------------
 st.title("🧬 HYPER-VAULT")
 
-st.markdown(
-"""
-### Next-Generation Bio-Digital Data Archiving
+st.markdown("""
+### Bio-Digital Data Archiving Platform
 
-Securely convert **Digital Data → DNA Sequence → Recover Original Files**
-"""
-)
+Securely convert **Digital Files → DNA Sequence → Recover Original Data**
+""")
 
-tab1, tab2 = st.tabs(["🔬 Encode File", "🧬 Decode DNA"])
+tab1, tab2 = st.tabs(["Encode File", "Decode DNA"])
 
-# -------------------------
-# ENCODING TAB
-# -------------------------
+# --------------------------
+# ENCODE
+# --------------------------
 with tab1:
 
     st.subheader("Upload File to Convert into DNA")
 
-    file = st.file_uploader(
-        "Upload a text file",
-        type=["txt"]
-    )
+    file = st.file_uploader("Upload text file", type=["txt"])
 
     if file:
 
-        try:
+        with st.spinner("Encoding file into DNA sequence..."):
+            time.sleep(1)
 
             dna_data = engine.encode(file.read())
 
-            st.success("File successfully encoded into DNA sequence")
+        st.success("Encoding completed")
 
-            st.text_area(
-                "DNA Sequence",
-                dna_data,
-                height=220
-            )
+        st.text_area(
+            "DNA Sequence",
+            dna_data,
+            height=220
+        )
 
-            st.info(f"DNA Length: {len(dna_data)} letters")
+        st.metric(
+            "DNA Length",
+            f"{len(dna_data)} letters"
+        )
 
-        except Exception as e:
-
-            st.error(f"Encoding error: {str(e)}")
-
-
-# -------------------------
-# DECODING TAB
-# -------------------------
+# --------------------------
+# DECODE
+# --------------------------
 with tab2:
 
     st.subheader("Paste DNA Sequence to Recover File")
 
     dna_input = st.text_area(
-        "Paste DNA sequence (a, c, g, t)",
+        "Paste DNA sequence (a,c,g,t)",
         height=220
     )
 
     if st.button("Recover Original File"):
 
         if dna_input.strip() == "":
-            st.warning("Please paste a DNA sequence first")
+            st.warning("Please paste DNA sequence")
 
         else:
-
             try:
 
-                restored_data = engine.decode(dna_input)
+                with st.spinner("Decoding DNA sequence..."):
+                    time.sleep(1)
+
+                    restored = engine.decode(dna_input)
 
                 st.success("DNA verified and decoded successfully")
 
                 st.download_button(
-                    label="Download Restored File",
-                    data=restored_data,
-                    file_name="restored_file.txt",
-                    mime="text/plain"
+                    "Download Restored File",
+                    restored,
+                    file_name="restored.txt"
                 )
 
-                st.balloons()
-
             except Exception as e:
-
                 st.error(str(e))

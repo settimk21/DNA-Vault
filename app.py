@@ -10,9 +10,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# --------------------------
-# Animated Background + UI Style
-# --------------------------
 st.markdown("""
 <style>
 
@@ -75,9 +72,6 @@ button {
 </style>
 """, unsafe_allow_html=True)
 
-# --------------------------
-# Header
-# --------------------------
 st.title("🧬 HYPER-VAULT")
 
 st.markdown("""
@@ -88,9 +82,7 @@ Securely convert **Digital Files → DNA Sequence → Recover Original Data**
 
 tab1, tab2 = st.tabs(["Encode File", "Decode DNA"])
 
-# --------------------------
-# ENCODE
-# --------------------------
+
 with tab1:
 
     st.subheader("Upload File to Convert into DNA")
@@ -117,9 +109,7 @@ with tab1:
             f"{len(dna_data)} letters"
         )
 
-# --------------------------
-# DECODE
-# --------------------------
+
 with tab2:
 
     st.subheader("Paste DNA Sequence to Recover File")
